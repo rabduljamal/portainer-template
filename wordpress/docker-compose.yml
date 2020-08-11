@@ -6,6 +6,7 @@ services:
     volumes:
       - db_data:/var/lib/mysql/
     restart: always
+    container_name: ${MYSQL_DATABASE_NAME}_db
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_DATABASE_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE_NAME}
@@ -15,12 +16,14 @@ services:
       - app-network
 
   wordpress:
+    depends_on: 
+      - ${MYSQL_DATABASE_NAME}_db
     image: wordpress:latest
     ports:
       - 80
     restart: always
     environment:
-      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_HOST: ${MYSQL_DATABASE_NAME}_db:3306
       WORDPRESS_DB_USER: ${MYSQL_DATABASE_USER}
       WORDPRESS_DB_PASSWORD: ${MYSQL_DATABASE_PASSWORD}
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE_NAME}
