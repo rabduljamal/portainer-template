@@ -6,32 +6,22 @@ services:
     volumes:
       - db_data:/var/lib/mysql/
     restart: always
-    container_name: "${COMPOSE_PROJECT_NAME}_db"
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_DATABASE_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE_NAME}
       MYSQL_USER: ${MYSQL_DATABASE_USER}
       MYSQL_PASSWORD: ${MYSQL_DATABASE_PASSWORD}
-    networks:
-      - app-network
 
   wp:
     image: wordpress:latest
     ports:
       - 80
     restart: always
-    container_name: "${COMPOSE_PROJECT_NAME}_wp"
     environment:
-      WORDPRESS_DB_HOST: "${COMPOSE_PROJECT_NAME}_db:3306"
+      WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_USER: ${MYSQL_DATABASE_USER}
       WORDPRESS_DB_PASSWORD: ${MYSQL_DATABASE_PASSWORD}
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE_NAME}
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
 
 volumes:
   db_data:
